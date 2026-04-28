@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FieldSpend – Smart Expense Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Playfair+Display:wght@700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- AUTH SCREEN -->
+<div id="auth-screen" class="screen active">
+  <div class="auth-bg">
+    <div class="grid-lines"></div>
+    <div class="auth-glow g1"></div>
+    <div class="auth-glow g2"></div>
+    <div class="auth-glow g3"></div>
+    <div class="floating-orbs">
+      <div class="orb o1"></div>
+      <div class="orb o2"></div>
+      <div class="orb o3"></div>
+    </div>
+  </div>
+  <div class="auth-split">
+    <div class="auth-hero">
+      <div class="hero-badge">✦ SMART TRACKING</div>
+      <h1 class="hero-title">Control Every<br><span class="gradient-text">Rupee</span> You Spend</h1>
+      <p class="hero-sub">Track field expenses, split bills with colleagues, and never lose a receipt again.</p>
+      <div class="hero-stats">
+        <div class="hstat"><span class="hstat-num">₹0</span><span class="hstat-label">Wasted</span></div>
+        <div class="hstat-div"></div>
+        <div class="hstat"><span class="hstat-num">100%</span><span class="hstat-label">Clarity</span></div>
+        <div class="hstat-div"></div>
+        <div class="hstat"><span class="hstat-num">∞</span><span class="hstat-label">Control</span></div>
+      </div>
+    </div>
+    <div class="auth-panel">
+      <div class="auth-container">
+        <div class="brand">
+          <div class="brand-logo"><span>₹</span></div>
+          <h2 class="brand-name">FieldSpend</h2>
+        </div>
+
+        <div class="auth-tabs">
+          <button class="tab-btn active" data-tab="login">Sign In</button>
+          <button class="tab-btn" data-tab="signup">Sign Up</button>
+        </div>
+
+        <div id="login-form" class="auth-form active">
+          <div class="input-group">
+            <label>Email Address</label>
+            <input type="email" id="login-email" placeholder="you@company.com" autocomplete="email"/>
+          </div>
+          <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password"/>
+          </div>
+          <button class="btn-primary full" id="login-btn">
+            <span>Sign In</span>
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="divider"><span>or</span></div>
+          <button class="btn-google" id="google-login-btn">
+            <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.31z"/></svg>
+            Continue with Google
+          </button>
+        </div>
+
+        <div id="signup-form" class="auth-form">
+          <div class="input-group">
+            <label>Full Name</label>
+            <input type="text" id="signup-name" placeholder="John Doe" autocomplete="name"/>
+          </div>
+          <div class="input-group">
+            <label>Work Email</label>
+            <input type="email" id="signup-email" placeholder="you@company.com" autocomplete="email"/>
+          </div>
+          <div class="input-group">
+            <label>Password <span style="color:var(--text3);font-size:0.78rem">(min 6 chars)</span></label>
+            <input type="password" id="signup-password" placeholder="••••••••" autocomplete="new-password"/>
+          </div>
+
+          <button class="btn-primary full" id="signup-btn">
+            <span>Create Account</span>
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="divider"><span>or</span></div>
+          <button class="btn-google" id="google-signup-btn">
+            <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.31z"/></svg>
+            Sign up with Google
+          </button>
+        </div>
+
+        <div id="auth-error" class="error-msg"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- APP SCREEN -->
+<div id="app-screen" class="screen">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo sm"><span>₹</span></div>
+      <span class="brand-name-sm">FieldSpend</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item active" data-view="dashboard">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.8"/></svg>
+        <span>Dashboard</span>
+      </a>
+      <a href="#" class="nav-item" data-view="add-expense">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span>Add Expense</span>
+      </a>
+      <a href="#" class="nav-item" data-view="splits">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span>Split Bills</span>
+        <span class="nav-badge" id="split-badge" style="display:none">0</span>
+      </a>
+      <a href="#" class="nav-item" data-view="summary">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Analytics</span>
+      </a>
+      <a href="#" class="nav-item" data-view="settings">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" stroke-width="1.8"/></svg>
+        <span>Settings</span>
+      </a>
+    </nav>
+    <div class="sidebar-user" id="sidebar-user">
+      <div class="user-avatar" id="user-avatar">?</div>
+      <div class="user-info">
+        <div class="user-name" id="user-name-display">User</div>
+        <div class="user-email" id="user-email-display"></div>
+      </div>
+      <button class="logout-btn" id="logout-btn" title="Logout">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <div class="mobile-topbar">
+    <button class="hamburger" id="hamburger">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="3" y1="18" x2="21" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="mobile-brand">FieldSpend</div>
+    <button class="btn-add-mobile" id="btn-add-mobile">+</button>
+  </div>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main class="main-content">
+
+    <!-- DASHBOARD -->
+    <div id="view-dashboard" class="view active">
+      <div class="page-header">
+        <div>
+          <p class="sub" id="greeting-text">Good morning!</p>
+          <h2>Dashboard</h2>
+        </div>
+        <div class="header-actions">
+          <select id="category-filter" class="filter-select">
+            <option value="">All Categories</option>
+            <option value="Hotel">Hotel</option>
+            <option value="Food">Food</option>
+            <option value="Travel">Travel</option>
+            <option value="Fuel">Fuel</option>
+            <option value="Stationery">Stationery</option>
+            <option value="Communication">Communication</option>
+            <option value="Entertainment">Entertainment</option>
+            <option value="Medical">Medical</option>
+            <option value="Other">Other</option>
+          </select>
+          <button class="btn-primary sm" id="btn-add-expense">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+            Add Expense
+          </button>
+        </div>
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi-card kpi-budget">
+          <div class="kpi-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M2 10h20" stroke="currentColor" stroke-width="1.8"/></svg>
+          </div>
+          <div class="kpi-label">Monthly Budget</div>
+          <div class="kpi-value" id="s-budget">₹0</div>
+        </div>
+        <div class="kpi-card kpi-spent">
+          <div class="kpi-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </div>
+          <div class="kpi-label">Total Spent</div>
+          <div class="kpi-value" id="s-spent">₹0</div>
+        </div>
+        <div class="kpi-card kpi-remaining">
+          <div class="kpi-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><polyline points="17 6 23 6 23 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="kpi-label">Remaining</div>
+          <div class="kpi-value" id="s-remaining">₹0</div>
+        </div>
+        <div class="kpi-card kpi-today">
+          <div class="kpi-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/><polyline points="12 6 12 12 16 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </div>
+          <div class="kpi-label">Today's Spend</div>
+          <div class="kpi-value" id="s-today">₹0</div>
+        </div>
+      </div>
+
+      <div class="budget-track">
+        <div class="bt-header">
+          <span class="bt-label">Budget utilisation this month</span>
+          <span class="bt-pct" id="bp-percent">0%</span>
+        </div>
+        <div class="budget-progress">
+          <div class="budget-bar" id="budget-bar"></div>
+        </div>
+      </div>
+
+      <div id="expense-list" class="expense-list">
+        <div class="empty-state" id="empty-state">
+          <div class="empty-icon">🧾</div>
+          <h3>No expenses yet</h3>
+          <p>Start tracking by adding your first expense</p>
+          <button class="btn-primary sm" style="margin-top:1rem" onclick="document.getElementById('btn-add-expense').click()">+ Add Expense</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD EXPENSE -->
+    <div id="view-add-expense" class="view">
+      <div class="page-header">
+        <div>
+          <p class="sub">Fill in the details below</p>
+          <h2 id="form-title">Add Expense</h2>
+        </div>
+      </div>
+      <div class="form-card">
+        <input type="hidden" id="edit-expense-id" />
+        <div class="form-grid">
+          <div class="input-group">
+            <label>Category <span class="req">*</span></label>
+            <select id="exp-category">
+              <option value="">Select category</option>
+              <option value="Hotel">🏨 Hotel</option>
+              <option value="Food">🍽️ Food</option>
+              <option value="Travel">🚗 Travel</option>
+              <option value="Fuel">⛽ Fuel</option>
+              <option value="Stationery">📎 Stationery</option>
+              <option value="Communication">📱 Communication</option>
+              <option value="Entertainment">🎭 Entertainment</option>
+              <option value="Medical">💊 Medical</option>
+              <option value="Other">📦 Other</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>Amount (₹) <span class="req">*</span></label>
+            <input type="number" id="exp-amount" placeholder="0.00" min="0" />
+          </div>
+          <div class="input-group">
+            <label>Date <span class="req">*</span></label>
+            <input type="date" id="exp-date" />
+          </div>
+          <div class="input-group">
+            <label>Description (optional)</label>
+            <input type="text" id="exp-description" placeholder="Brief note…" />
+          </div>
+        </div>
+
+        <!-- SPLIT SECTION -->
+        <div class="split-section">
+          <div class="split-toggle-row">
+            <div class="split-toggle-info">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              <span>Split / Group Expense</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="split-toggle" />
+              <span class="toggle-track"><span class="toggle-thumb"></span></span>
+            </label>
+          </div>
+
+          <div id="split-options" class="split-options hidden">
+            <div class="split-type-row">
+              <label class="split-type-btn active" data-type="paid_for_group">
+                <input type="radio" name="split-type" value="paid_for_group" checked />
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 12V22H4V12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M22 7H2v5h20V7z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 22V7M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                <span>I paid for group</span>
+              </label>
+              <label class="split-type-btn" data-type="someone_paid">
+                <input type="radio" name="split-type" value="someone_paid" />
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                <span>Someone paid for me</span>
+              </label>
+            </div>
+
+            <div id="paid-for-group-section" class="split-detail-section">
+              <div class="split-info-box info">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/><line x1="12" y1="8" x2="12" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="12" y1="16" x2="12.01" y2="16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+                You paid the full amount. Enter who owes you and how much.
+              </div>
+              <div id="group-members-list" class="group-members-list"></div>
+              <button class="btn-add-member" id="add-member-btn" type="button">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+                Add Person
+              </button>
+              <div class="split-summary" id="split-summary-group"></div>
+            </div>
+
+            <div id="someone-paid-section" class="split-detail-section hidden">
+              <div class="split-info-box warning">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" stroke="currentColor" stroke-width="1.8"/><line x1="12" y1="9" x2="12" y2="13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+                Someone else paid. Enter who paid and your share of the expense.
+              </div>
+              <div class="form-grid" style="margin-top:0.8rem;margin-bottom:0">
+                <div class="input-group">
+                  <label>Paid by (Name)</label>
+                  <input type="text" id="payer-name" placeholder="Colleague's name" />
+                </div>
+                <div class="input-group">
+                  <label>My share (₹)</label>
+                  <input type="number" id="my-share" placeholder="Amount I owe" min="0" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-secondary" id="cancel-expense-btn">Cancel</button>
+          <button class="btn-primary" id="save-expense-btn">
+            Save Expense
+          </button>
+        </div>
+        <div id="form-error" class="error-msg"></div>
+      </div>
+    </div>
+
+    <!-- SPLIT BILLS VIEW -->
+    <div id="view-splits" class="view">
+      <div class="page-header">
+        <div>
+          <p class="sub">Track group expenses & dues</p>
+          <h2>Split Bills</h2>
+        </div>
+      </div>
+
+      <div class="splits-summary-row">
+        <div class="split-kpi owed-to-me">
+          <div class="split-kpi-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><polyline points="7 17 17 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><polyline points="7 7 17 7 17 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Others owe me
+          </div>
+          <div class="split-kpi-value green" id="total-owed-to-me">₹0</div>
+        </div>
+        <div class="split-kpi i-owe">
+          <div class="split-kpi-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><polyline points="17 7 7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><polyline points="17 17 7 17 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            I owe others
+          </div>
+          <div class="split-kpi-value red" id="total-i-owe">₹0</div>
+        </div>
+        <div class="split-kpi net">
+          <div class="split-kpi-label">Net Position</div>
+          <div class="split-kpi-value" id="net-position">₹0</div>
+        </div>
+      </div>
+
+      <div class="splits-grid">
+        <div class="splits-panel">
+          <div class="splits-panel-header">
+            <h3>People who owe me</h3>
+          </div>
+          <div id="owed-to-me-list" class="splits-list">
+            <div class="splits-empty">No pending dues</div>
+          </div>
+        </div>
+        <div class="splits-panel">
+          <div class="splits-panel-header">
+            <h3>I owe these people</h3>
+          </div>
+          <div id="i-owe-list" class="splits-list">
+            <div class="splits-empty">You're all settled up! 🎉</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="splits-history-card">
+        <h3 class="sh-title">Split History</h3>
+        <div id="splits-history-list"></div>
+      </div>
+    </div>
+
+    <!-- ANALYTICS / MONTHLY SUMMARY -->
+    <div id="view-summary" class="view">
+      <div class="page-header">
+        <div>
+          <p class="sub">Your spending patterns</p>
+          <h2>Analytics</h2>
+        </div>
+        <select id="month-selector" class="filter-select"></select>
+      </div>
+      <div class="summary-grid">
+        <div class="summary-big-card">
+          <h3>Spending by Category</h3>
+          <div id="category-breakdown"></div>
+        </div>
+        <div class="summary-big-card">
+          <h3>Daily Trend</h3>
+          <div id="daily-trend" class="trend-chart"></div>
+        </div>
+      </div>
+      <div class="summary-big-card full-width" style="margin-top:1.5rem">
+        <h3>Top Expenses This Month</h3>
+        <div id="top-expenses-list"></div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="view-settings" class="view">
+      <div class="page-header">
+        <div>
+          <p class="sub">Manage your preferences</p>
+          <h2>Settings</h2>
+        </div>
+      </div>
+      <div class="settings-cards">
+        <div class="settings-card">
+          <h3>Budget Settings</h3>
+          <p class="settings-hint">Set your monthly field expense budget. Tracked against your current month spending.</p>
+          <div class="input-group">
+            <label>Monthly Budget (₹)</label>
+            <input type="number" id="settings-budget" placeholder="e.g. 15000" />
+          </div>
+          <button class="btn-primary sm" id="save-budget-btn">Save Budget</button>
+        </div>
+        <div class="settings-card">
+          <h3>Account</h3>
+          <div class="profile-display">
+            <div class="user-avatar lg" id="settings-avatar">?</div>
+            <div>
+              <div class="user-name" id="settings-name">User</div>
+              <div class="user-email" id="settings-email" style="font-size:0.82rem;color:var(--text2)"></div>
+            </div>
+          </div>
+          <button class="btn-danger sm" id="settings-logout-btn">Sign Out</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- EXPENSE MODAL -->
+<div id="expense-modal" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-title">Expense Detail</h3>
+      <button class="modal-close" id="modal-close">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn-secondary" id="modal-edit-btn">Edit</button>
+      <button class="btn-danger" id="modal-delete-btn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- SETTLE MODAL -->
+<div id="settle-modal" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Mark as Settled</h3>
+      <button class="modal-close" id="settle-modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <p id="settle-confirm-text" style="color:var(--text2);font-size:0.92rem;line-height:1.6"></p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" id="settle-cancel-btn">Cancel</button>
+      <button class="btn-primary" id="settle-confirm-btn">Mark Settled ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- NEW SECRET CODE POPUP MODAL -->
+<div id="secret-code-modal" class="modal-overlay hidden">
+  <div class="modal" style="max-width: 400px; text-align: center; padding: 2rem;">
+    <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem; font-family: 'Playfair Display', serif;">Security Check 🔐</h3>
+    <p style="color:var(--text2); font-size:0.95rem; margin-bottom:1.5rem;">Please enter your secret access code to proceed with creating an account.</p>
+    <div class="input-group" style="margin-bottom: 1.5rem;">
+      <input type="password" id="modal-secret-code" placeholder="Enter code" style="text-align: center; font-size: 1.2rem; letter-spacing: 2px;" />
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+      <button class="btn-primary full" id="secret-confirm-btn">Verify & Continue</button>
+      <button class="btn-secondary full" id="secret-cancel-btn">Cancel</button>
+    </div>
+    <div id="secret-error" class="error-msg" style="margin-top: 1rem;"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
