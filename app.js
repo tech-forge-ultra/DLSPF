@@ -10,8 +10,8 @@ import {
   updateProfile
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import {
-  getFirestore, collection, addDoc, doc, updateDoc,
-  deleteDoc, query, where, serverTimestamp, onSnapshot
+  getFirestore, collection, addDoc, getDocs, doc, updateDoc,
+  deleteDoc, query, where, orderBy, serverTimestamp, onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // =====================
@@ -41,9 +41,9 @@ let userBudget = 15000;
 let editingExpenseId = null;
 let currentFilter = "";
 let settleTarget = null;
-let pendingSignup = null; // Holds form data while modal is open
-let unsubExpenses = null; // Real-time sync listener
-let unsubUser = null;     // Real-time sync listener
+let pendingSignup = null; 
+let unsubExpenses = null; 
+let unsubUser = null;     
 
 // =====================
 // CATEGORY CONFIG
@@ -122,7 +122,6 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
   });
 });
 
-// 1. Triggers Modal for Standard Signup
 document.getElementById("signup-btn").addEventListener("click", () => {
   const name = document.getElementById("signup-name").value.trim();
   const email = document.getElementById("signup-email").value.trim();
@@ -135,29 +134,24 @@ document.getElementById("signup-btn").addEventListener("click", () => {
   err.textContent = "";
   pendingSignup = { type: 'email', name, email, pass };
   
-  // Show Sweet Popup Modal
   document.getElementById("modal-secret-code").value = "";
   document.getElementById("secret-error").textContent = "";
   document.getElementById("secret-code-modal").classList.remove("hidden");
 });
 
-// 2. Triggers Modal for Google Signup
 document.getElementById("google-signup-btn").addEventListener("click", () => {
   pendingSignup = { type: 'google' };
   
-  // Show Sweet Popup Modal
   document.getElementById("modal-secret-code").value = "";
   document.getElementById("secret-error").textContent = "";
   document.getElementById("secret-code-modal").classList.remove("hidden");
 });
 
-// 3. Handle Modal Cancel
 document.getElementById("secret-cancel-btn").addEventListener("click", () => {
   document.getElementById("secret-code-modal").classList.add("hidden");
   pendingSignup = null;
 });
 
-// 4. Handle Modal Confirmation (Executes the actual signup)
 document.getElementById("secret-confirm-btn").addEventListener("click", async () => {
   const codeInput = document.getElementById("modal-secret-code").value;
   const err = document.getElementById("secret-error");
@@ -168,7 +162,6 @@ document.getElementById("secret-confirm-btn").addEventListener("click", async ()
     return;
   }
 
-  // Code matches, close modal and process
   err.textContent = "";
   document.getElementById("secret-code-modal").classList.add("hidden");
   const btn = document.getElementById("secret-confirm-btn");
@@ -190,14 +183,15 @@ document.getElementById("secret-confirm-btn").addEventListener("click", async ()
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
       
-      // Assume success and let Firebase rules handle the rest
-      await addDoc(collection(db, "users"), {
-        uid: user.uid, name: user.displayName, email: user.email,
-        budget: 15000, createdAt: serverTimestamp()
-      }).catch(err => {
-        // If doc already exists, it's fine, rule will block and we move on.
-        console.log("Google User already exists in DB");
-      });
+      const q = query(collection(db, "users"), where("uid", "==", user.uid));
+      const snap = await getDocs(q);
+      
+      if (snap.empty) {
+        await addDoc(collection(db, "users"), {
+          uid: user.uid, name: user.displayName, email: user.email,
+          budget: 15000, createdAt: serverTimestamp()
+        });
+      }
     } catch (e) {
       mainErr.textContent = e.message.replace("Firebase: ", "");
     }
@@ -207,7 +201,6 @@ document.getElementById("secret-confirm-btn").addEventListener("click", async ()
   pendingSignup = null;
 });
 
-// 5. Standard Login (No modal required)
 document.getElementById("login-btn").addEventListener("click", async () => {
   const email = document.getElementById("login-email").value.trim();
   const pass = document.getElementById("login-password").value;
@@ -220,11 +213,18 @@ document.getElementById("login-btn").addEventListener("click", async () => {
   }
 });
 
-// 6. Google Login
 document.getElementById("google-login-btn").addEventListener("click", async () => {
   const err = document.getElementById("auth-error");
   try {
-    await signInWithPopup(auth, googleProvider);
+    const result = await signInWithPopup(auth, googleProvider);
+    const user = result.user;
+    const q = query(collection(db, "users"), where("uid", "==", user.uid));
+    const snap = await getDocs(q);
+    
+    if (snap.empty) {
+      await user.delete().catch(() => signOut(auth)); 
+      throw new Error("Account not found. Please Sign Up with the secret code.");
+    }
   } catch (e) {
     err.textContent = e.message.replace("Firebase: ", "");
   }
@@ -237,7 +237,6 @@ document.getElementById("settings-logout-btn").addEventListener("click", () => s
 // REAL-TIME SYNC & AUTH STATE
 // =====================
 function startRealtimeSync() {
-  // 1. Sync User Data (Budget, Profile) instantly
   const userQ = query(collection(db, "users"), where("uid", "==", currentUser.uid));
   unsubUser = onSnapshot(userQ, (snap) => {
     if (!snap.empty) {
@@ -258,7 +257,6 @@ function startRealtimeSync() {
     updateUI(); 
   });
 
-  // 2. Sync Expenses instantly
   const expQ = query(collection(db, "expenses"), where("uid", "==", currentUser.uid));
   unsubExpenses = onSnapshot(expQ, (snap) => {
     expenses = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -281,7 +279,7 @@ onAuthStateChanged(auth, (user) => {
     
     setGreeting();
     switchView("dashboard");
-    startRealtimeSync(); // Turns on true real-time syncing
+    startRealtimeSync(); 
   } else {
     currentUser = null;
     stopRealtimeSync();
@@ -492,7 +490,6 @@ document.getElementById("save-expense-btn").addEventListener("click", async () =
       showToast("Expense added ✓", "success");
     }
 
-    // No need to manually load, onSnapshot handles it!
     switchView("dashboard");
   } catch (e) {
     err.textContent = "Error saving: " + e.message;
@@ -513,15 +510,14 @@ function updateUI() {
 }
 
 // =====================
-// RENDER DASHBOARD (ELEVATED BOXES)
+// RENDER DASHBOARD (ALL RECORDS, CONTINUOUS BUDGET)
 // =====================
 function renderDashboard() {
-  const now = new Date();
-  const currentMonth = now.toISOString().slice(0, 7);
   const today = todayStr();
   const filter = document.getElementById("category-filter").value;
 
-  let filtered = expenses.filter(e => (e.date || "").startsWith(currentMonth));
+  // Show all historical expenses (no monthly filter applied)
+  let filtered = [...expenses];
   if (filter) filtered = filtered.filter(e => e.category === filter);
 
   const totalSpent = filtered.reduce((s, e) => s + getAmt(e), 0);
@@ -931,21 +927,28 @@ function renderSummary() {
 document.getElementById("save-budget-btn").addEventListener("click", async () => {
   const budget = parseFloat(document.getElementById("settings-budget").value);
   if (!budget || budget <= 0) { showToast("Enter a valid budget", "error"); return; }
+  
+  const btn = document.getElementById("save-budget-btn");
+  btn.textContent = "Saving..."; btn.disabled = true;
+
   try {
     const q = query(collection(db, "users"), where("uid", "==", currentUser.uid));
-    // Notice how we don't have a manual load or updateUI here anymore either!
-    // The onSnapshot listener will detect this change and update the screen instantly.
-    if (!unsubUser) { // safety check
-      const snap = await getDocs(q);
-      if (!snap.empty) { await updateDoc(doc(db, "users", snap.docs[0].id), { budget }); }
+    const snap = await getDocs(q);
+    
+    if (!snap.empty) { 
+      await updateDoc(doc(db, "users", snap.docs[0].id), { 
+        budget: budget,
+        uid: currentUser.uid 
+      }); 
+      showToast("Budget saved ✓", "success");
     } else {
-       // get current doc id to update
-       const snap = await getDocs(q);
-       if(!snap.empty) await updateDoc(doc(db, "users", snap.docs[0].id), { budget });
+      showToast("User profile not found", "error");
     }
-    showToast("Budget saved ✓", "success");
   } catch (e) {
+    console.error("Budget save error:", e);
     showToast("Error saving budget", "error");
+  } finally {
+    btn.textContent = "Save Budget"; btn.disabled = false;
   }
 });
 
